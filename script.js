@@ -11,9 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const keypadButtons = document.querySelectorAll('#score-keypad-overlay .keypad button');
     const resetAllButton = document.getElementById('reset-all-scores');
 
+    const winnerOverlay = document.getElementById('winner-overlay');
+    const winnerTextElement = document.getElementById('winner-text');
+    const playAgainButton = document.getElementById('play-again-button');
+    const confettiContainer = document.getElementById('confetti-container');
+
     let currentEditingSide = null; 
     let currentEditingScoreElement = null; 
     let currentKeypadInput = "";
+    let gameActive = true; 
 
     const WIN_SCORE = 100; 
 
@@ -23,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function loadScores() {
-        const savedScores = localStorage.getItem('playerScores_v2'); // استخدمت مفتاحًا جديدًا لتجنب تداخل البيانات القديمة
+        const savedScores = localStorage.getItem('playerScores_calc_v1'); // اسم جديد لـ localStorage
         if (savedScores) {
             scores = JSON.parse(savedScores);
         }
@@ -31,13 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveScores() {
-        localStorage.setItem('playerScores_v2', JSON.stringify(scores));
+        localStorage.setItem('playerScores_calc_v1', JSON.stringify(scores));
     }
 
     function renderScores() {
         renderSideScores(leftScoresList, scores.left, leftTotalDisplay, 'left');
         renderSideScores(rightScoresList, scores.right, rightTotalDisplay, 'right');
-        checkWinCondition();
+        if (gameActive) { // تحقق من الفوز فقط إذا كانت اللعبة نشطة
+            checkWinCondition();
+        }
     }
 
     function renderSideScores(listElement, sideScoresArray, totalElement, side) {
@@ -51,13 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
             scoreDiv.dataset.side = side;
             scoreDiv.addEventListener('click', handleScoreItemClick);
             listElement.appendChild(scoreDiv);
-            total += score; // تأكد أن score هو رقم
+            total += Number(score); // ضمان أن الجمع يتم كأرقام
         });
         totalElement.textContent = `المجموع: ${total}`;
     }
 
     function handleScoreItemClick(event) {
-        event.stopPropagation(); // مهم جدًا لمنع فتح لوحة المفاتيح لإضافة جديدة
+        if (!gameActive) return; 
+        event.stopPropagation(); 
         currentEditingScoreElement = event.target;
         currentEditingSide = event.target.dataset.side;
         currentKeypadInput = event.target.textContent; 
@@ -65,19 +74,16 @@ document.addEventListener('DOMContentLoaded', () => {
         keypadOverlay.style.display = 'flex';
     }
 
-        [leftPanel, rightPanel].forEach(panel => {
+    [leftPanel, rightPanel].forEach(panel => {
         panel.addEventListener('click', (event) => {
-            // إذا كان الهدف الذي تم النقر عليه هو عنصر نقطة موجود (score-item)
-            // فإن handleScoreItemClick قد تم استدعاؤه بالفعل وأوقف الانتشار،
-            // أو إذا لم يوقف الانتشار، فإننا لا نريد فتح لوحة لإضافة جديدة.
-            if (event.target.classList.contains('score-item')) {
-                return; // لا تفعل شيئًا هنا، لأن تعديل النقطة يتم معالجته بشكل منفصل
-            }
+            if (!gameActive) return;
 
-            // إذا وصل الكود إلى هنا، فهذا يعني أن النقر لم يكن على score-item
-            // وبالتالي، هو نقرة على المساحة الفارغة للـ panel (أو على scores-list الفارغة)
+            if (event.target.classList.contains('score-item')) {
+                return; 
+            }
+            
             currentEditingSide = panel.dataset.side;
-            currentEditingScoreElement = null; // إضافة جديدة
+            currentEditingScoreElement = null; 
             currentKeypadInput = "";
             currentScoreInputDisplay.textContent = currentKeypadInput || "-";
             keypadOverlay.style.display = 'flex';
@@ -86,27 +92,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     keypadButtons.forEach(button => {
         button.addEventListener('click', () => {
+            if (!gameActive && keyValue !== 'confirm-score') { // السماح بالتأكيد لإغلاق اللوحة حتى لو انتهت اللعبة
+                 if (keyValue === 'confirm-score') { /* do nothing, let it proceed to close */ }
+                 else return;
+            }
+
             const keyValue = button.dataset.key;
 
             if (keyValue === 'confirm-score') {
-                if (currentKeypadInput.trim() === "") {
-                    // alert("الرجاء إدخال رقم."); // يمكنك تفعيل هذا
-                    closeKeypad();
-                    return;
-                }
-                const newScore = parseInt(currentKeypadInput);
-                if (!isNaN(newScore) && currentEditingSide) {
-                    if (currentEditingScoreElement) { 
-                        const index = parseInt(currentEditingScoreElement.dataset.index);
-                        scores[currentEditingSide][index] = newScore;
-                    } else { 
-                        scores[currentEditingSide].push(newScore);
+                if (currentKeypadInput.trim() === "" && gameActive) { // لا تضف إذا فارغ واللعبة نشطة
+                    // لا داعي لـ alert هنا، فقط أغلق
+                } else if (gameActive) { // فقط قم بالتعديل/الإضافة إذا اللعبة نشطة
+                    const newScore = parseInt(currentKeypadInput);
+                    if (!isNaN(newScore) && currentEditingSide) {
+                        if (currentEditingScoreElement) { 
+                            const index = parseInt(currentEditingScoreElement.dataset.index);
+                            scores[currentEditingSide][index] = newScore;
+                        } else { 
+                            scores[currentEditingSide].push(newScore);
+                        }
+                        saveScores();
+                        renderScores(); // ستتحقق من الفوز
                     }
-                    saveScores();
-                    renderScores();
                 }
-                closeKeypad();
-            } else if (keyValue === 'clear-digit') {
+                closeKeypad(); // أغلق اللوحة دائمًا عند التأكيد
+                return; // مهم لإيقاف تنفيذ باقي الشروط
+            }
+            
+            if (!gameActive) return; // إذا لم يكن تأكيد، لا تفعل شيئًا آخر إذا اللعبة انتهت
+
+            if (keyValue === 'clear-digit') {
                 currentKeypadInput = currentKeypadInput.slice(0, -1);
             } else { 
                 if (currentKeypadInput.length < 4) { 
@@ -120,37 +135,92 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeKeypad() {
         keypadOverlay.style.display = 'none';
         currentKeypadInput = "";
-        currentEditingSide = null;
-        currentEditingScoreElement = null;
+        // لا نعيد تعيين currentEditingSide و currentEditingScoreElement هنا
+        // لأننا قد نحتاجهم إذا كان هناك فوز بعد إغلاق اللوحة
     }
     keypadOverlay.addEventListener('click', (e) => { if (e.target === keypadOverlay) closeKeypad(); });
 
+    function resetGame() {
+        scores.left = [];
+        scores.right = [];
+        gameActive = true; 
+        winnerOverlay.style.display = 'none'; 
+        clearConfetti();
+        saveScores();
+        renderScores(); 
+    }
+
     resetAllButton.addEventListener('click', () => {
-        if (confirm("هل أنت متأكد أنك تريد مسح جميع النقاط؟")) {
-            scores.left = [];
-            scores.right = [];
-            saveScores();
-            renderScores();
+        if (confirm("هل أنت متأكد أنك تريد مسح جميع النقاط والبدء من جديد؟")) {
+            resetGame();
         }
     });
     
-    function checkWinCondition() {
-        let leftTotal = scores.left.reduce((sum, score) => sum + score, 0);
-        let rightTotal = scores.right.reduce((sum, score) => sum + score, 0);
+    playAgainButton.addEventListener('click', resetGame);
 
-        let message = "";
+    function checkWinCondition() {
+        if (!gameActive) return; 
+
+        let leftTotal = scores.left.reduce((sum, score) => sum + Number(score), 0);
+        let rightTotal = scores.right.reduce((sum, score) => sum + Number(score), 0);
+
+        let winnerMessage = "";
+        let celebrationNeeded = false;
+
         if (leftTotal >= WIN_SCORE && leftTotal > rightTotal) {
-            message = "الفريق الأيسر فاز!";
+            winnerMessage = "فريق الأبيض فاز!"; 
+            celebrationNeeded = true;
         } else if (rightTotal >= WIN_SCORE && rightTotal > leftTotal) {
-            message = "الفريق الأيمن فاز!";
+            winnerMessage = "فريق الأسود فاز!"; 
+            celebrationNeeded = true;
         } else if (leftTotal >= WIN_SCORE && rightTotal >= WIN_SCORE && leftTotal === rightTotal && WIN_SCORE > 0) {
-             message = "تعادل والفريقان وصلا للهدف!";
+             winnerMessage = "تعادل والفريقان وصلا للهدف!";
+             // لا احتفال بالقصاصات في حالة التعادل هذه
         }
-        // يمكنك عرض الرسالة بطريقة أفضل من alert إذا أردت
-        if (message) {
-            // setTimeout(() => alert(message), 100); // تأخير بسيط لضمان عرض النتيجة النهائية أولاً
+        
+        if (winnerMessage) { 
+            showWinnerScreen(winnerMessage, celebrationNeeded);
+            gameActive = false; 
         }
     }
 
+    function showWinnerScreen(message, celebrate) {
+        winnerTextElement.textContent = message;
+        winnerOverlay.style.display = 'flex';
+        if (celebrate) { 
+            launchConfetti();
+        }
+    }
+
+    function launchConfetti() {
+        clearConfetti(); 
+        const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#ffffff', '#1abc9c'];
+        const confettiCount = 120; // زيادة عدد القصاصات
+        for (let i = 0; i < confettiCount; i++) { 
+            const confettiPiece = document.createElement('div');
+            confettiPiece.classList.add('confetti');
+            confettiPiece.style.left = (Math.random() * 100) + 'vw'; 
+            confettiPiece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            const animationDuration = (Math.random() * 2 + 2.5); // مدة سقوط عشوائية بين 2.5 و 4.5 ثانية
+            confettiPiece.style.animationDuration = animationDuration + 's';
+            confettiPiece.style.animationDelay = (Math.random() * animationDuration * 0.5) + 's'; // تأخير يبدأ خلال نصف مدة الأنيميشن
+            
+            const size = (Math.random() * 8 + 6) + 'px'; // حجم بين 6 و 14 بكسل
+            confettiPiece.style.width = size;
+            confettiPiece.style.height = size;
+            
+            if (Math.random() > 0.6) {
+                confettiPiece.style.borderRadius = '50%'; 
+            } else {
+                 confettiPiece.style.transform = `rotate(${Math.random() * 360}deg)`;
+            }
+            confettiContainer.appendChild(confettiPiece);
+        }
+    }
+
+    function clearConfetti() {
+        confettiContainer.innerHTML = '';
+    }
+    
     loadScores();
 });
