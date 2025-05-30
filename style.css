@@ -94,51 +94,58 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 .reset-button svg { fill: var(--text-color-dark-bg); }
 .reset-button:hover { background-color: #333; }
 
-/* تنسيقات لوحة الأرقام (Score Keypad) - مكبرة */
+/* تنسيقات لوحة الأرقام (Score Keypad) - الأساسية للشاشات الكبيرة */
 #score-keypad-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.85); /* تعتيم أكثر */
-    display: none; justify-content: center; align-items: center;
-    z-index: 1000; padding: 20px;
+    background-color: rgba(0,0,0,0.85);
+    display: none; /* يبدأ مخفيًا */
+    flex-direction: column; /* <-- تغيير: لترتيب شاشة العرض فوق لوحة الأرقام */
+    justify-content: center; 
+    align-items: center;
+    z-index: 1000; 
+    padding: 15px; /* تقليل الحشوة قليلاً للهواتف */
 }
+
 #score-keypad-overlay .current-keypad-input-display {
-    width: 100%;
-    max-width: 320px;
+    width: 90%; /* استخدام نسبة مئوية ليتناسب مع الشاشة */
+    max-width: 300px; /* حد أقصى للعرض ليبقى مناسبًا */
     background-color: var(--keypad-button-bg);
     color: var(--text-color-dark-bg);
-    font-size: 2rem;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    font-size: 1.8rem; /* تعديل حجم الخط إذا لزم الأمر */
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
     text-align: center;
-    min-height: 60px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     border: 1px solid #444;
 }
+
 #score-keypad-overlay .keypad {
     background-color: var(--keypad-bg);
-    padding: 20px;
-    border-radius: 12px;
+    padding: 15px;
+    border-radius: 10px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    width: 100%;
-    max-width: 320px;
+    gap: 10px;
+    width: 90%; /* استخدام نسبة مئوية */
+    max-width: 300px; /* حد أقصى للعرض */
 }
 #score-keypad-overlay .keypad button {
     background-color: var(--keypad-button-bg);
     color: var(--text-color-dark-bg);
     border: none;
-    border-radius: 10px;
-    font-size: 1.8rem;
-    padding: 20px 0;
+    border-radius: 8px;
+    font-size: 1.6rem; /* تعديل حجم الخط إذا لزم الأمر */
+    padding: 18px 0; /* يمكن تعديل الحشوة الرأسية لتناسب الحجم */
     cursor: pointer;
     transition: background-color 0.2s;
     user-select: none;
 }
+
 #score-keypad-overlay .keypad button:hover { background-color: var(--keypad-button-hover-bg); }
 #score-keypad-overlay .keypad button:active { background-color: #404040; }
 #score-keypad-overlay .keypad .keypad-confirm { background-color: #4CAF50; }
