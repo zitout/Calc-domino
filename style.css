@@ -146,6 +146,90 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
     user-select: none;
 }
 
+
+/* Winner Overlay Styles */
+.winner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* خلفية معتمة أكثر للاحتفال */
+    display: none; /* يبدأ مخفيًا */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* فوق كل شيء آخر */
+    text-align: center;
+    flex-direction: column; /* لترتيب الرسالة والأزرار */
+    padding: 20px;
+}
+
+.winner-message-box {
+    background-color: #2c3e50; /* لون خلفية داكن للاحتفال */
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: #ecf0f1; /* لون نص فاتح */
+    position: relative; /* لوضع القصاصات */
+    overflow: hidden; /* لمنع القصاصات من الخروج بشكل غريب */
+}
+
+#winner-text {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    margin-bottom: 25px;
+    font-weight: bold;
+    color: #f1c40f; /* لون ذهبي للفوز */
+}
+
+#play-again-button {
+    background-color: #3498db; /* أزرق للزر */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+#play-again-button:hover {
+    background-color: #2980b9;
+}
+
+/* Confetti Styles */
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* لتمرير النقرات من خلالها */
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: red; /* سيتم تغيير اللون بواسطة JS */
+    opacity: 0.7;
+    animation: fall 3s linear infinite;
+    border-radius: 2px; /* لجعلها تبدو كقصاصات */
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-20px) rotateZ(0deg);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(120vh) rotateZ(720deg); /* تسقط لمسافة أبعد من الشاشة */
+        opacity: 0;
+    }
+}
+
+
+
 #score-keypad-overlay .keypad button:hover { background-color: var(--keypad-button-hover-bg); }
 #score-keypad-overlay .keypad button:active { background-color: #404040; }
 #score-keypad-overlay .keypad .keypad-confirm { background-color: #4CAF50; }
