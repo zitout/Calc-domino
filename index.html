@@ -4,24 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>مسجل النقاط</title>
-    <link rel="stylesheet" href="style.css"> <!-- سننشئ style.css جديدًا أو نعدل الحالي بشكل كبير -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="score-container">
-        <div class="side left-side" id="left-panel">
+        <div class="side left-side" id="left-panel" data-side="left">
             <div class="scores-list" id="left-scores-list">
                 <!-- الأرقام ستضاف هنا بواسطة JavaScript -->
             </div>
             <div class="total-score" id="left-total">المجموع: 0</div>
-            <button class="add-score-area" data-side="left" title="إضافة نقطة للجانب الأيسر">+</button>
         </div>
 
-        <div class="side right-side" id="right-panel">
+        <div class="side right-side" id="right-panel" data-side="right">
             <div class="scores-list" id="right-scores-list">
                 <!-- الأرقام ستضاف هنا بواسطة JavaScript -->
             </div>
             <div class="total-score" id="right-total">المجموع: 0</div>
-            <button class="add-score-area" data-side="right" title="إضافة نقطة للجانب الأيمن">+</button>
         </div>
     </div>
 
@@ -29,18 +27,18 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.17l2.12-2.12 1.41 1.41L13.41 13.5l2.12 2.12-1.41 1.41L12 14.83l-2.12 2.12-1.41-1.41L10.59 13.5l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg>
     </button>
 
-    <div class="keypad-overlay" id="score-keypad-overlay"> <!-- keypad مختلف قليلاً -->
+    <div class="keypad-overlay" id="score-keypad-overlay">
         <div class="current-keypad-input-display" id="current-score-input"></div>
         <div class="keypad">
             <button data-key="1">1</button> <button data-key="2">2</button> <button data-key="3">3</button>
             <button data-key="4">4</button> <button data-key="5">5</button> <button data-key="6">6</button>
             <button data-key="7">7</button> <button data-key="8">8</button> <button data-key="9">9</button>
-            <button data-key="clear-digit" class="keypad-backspace">⌫</button> <!-- مسح آخر رقم في الإدخال الحالي -->
+            <button data-key="clear-digit" class="keypad-backspace">⌫</button>
             <button data-key="0">0</button>
             <button data-key="confirm-score" class="keypad-confirm">✔️</button>
         </div>
     </div>
 
-    <script src="script.js"></script> <!-- سننشئ script.js جديدًا أو نعدل الحالي بشكل كبير -->
+    <script src="script.js"></script>
 </body>
 </html>
