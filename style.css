@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Nunito:wght@400;700&display=swap'); /* إضافة خطوط جوجل */
+
 :root {
     --left-bg: #ffffff;
     --left-text: #1a963c; /* أخضر */
@@ -8,10 +10,17 @@
     --keypad-button-bg: #282828;
     --keypad-button-hover-bg: #383838;
     --text-color-dark-bg: #e0e0e0;
+    /* خطوط جديدة */
+    --font-family-default: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط افتراضي مع Nunito */
+    --font-family-numeric: 'Roboto Mono', 'Courier New', Courier, monospace; /* خط للأرقام */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: var(--font-family-default); /* تطبيق الخط الافتراضي */
+    -webkit-tap-highlight-color: transparent;
+}
 
 .score-container {
     width: 100%;
@@ -47,11 +56,12 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 }
 
 .score-item {
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-family: var(--font-family-numeric); /* تطبيق خط الأرقام */
+    font-size: clamp(1.9rem, 6vw, 3.2rem); /* زيادة الحجم قليلاً */
     font-weight: bold;
-    padding: 8px 0;
+    padding: 10px 0; /* زيادة padding لتناسب الحجم الجديد */
     border-bottom: 1px dashed currentColor;
-    cursor: pointer; 
+    cursor: pointer;
     text-align: center;
 }
 .score-item:last-child {
@@ -62,13 +72,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 }
 
 .total-score {
-    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-family: var(--font-family-numeric); /* تطبيق خط الأرقام */
+    font-size: clamp(1.6rem, 4.8vw, 2.6rem); /* زيادة الحجم قليلاً */
     font-weight: bold;
-    padding: 10px;
+    padding: 12px; /* زيادة padding */
     text-align: center;
     border-top: 2px solid currentColor;
     margin-top: auto;
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 .reset-button {
@@ -105,20 +116,22 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
     padding: 15px; 
 }
 #score-keypad-overlay .current-keypad-input-display {
-    width: 90%; 
-    max-width: 300px; 
+    font-family: var(--font-family-numeric); /* تطبيق خط الأرقام */
+    width: 90%;
+    max-width: 300px;
     background-color: var(--keypad-button-bg);
     color: var(--text-color-dark-bg);
-    font-size: 1.8rem; 
-    padding: 12px;
+    font-size: 2.2rem; /* زيادة الحجم */
+    font-weight: bold; /* جعل الخط أعرض قليلاً */
+    padding: 15px; /* زيادة padding */
     border-radius: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 15px; /* زيادة المسافة */
     text-align: center;
-    min-height: 50px;
+    min-height: 60px; /* زيادة الارتفاع الأدنى */
     display: flex;
     align-items: center;
     justify-content: center;
-    letter-spacing: 2px;
+    letter-spacing: 3px; /* زيادة التباعد بين الأحرف */
     border: 1px solid #444;
 }
 #score-keypad-overlay .keypad {
@@ -132,12 +145,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
     max-width: 300px; 
 }
 #score-keypad-overlay .keypad button {
+    font-family: var(--font-family-numeric); /* تطبيق خط الأرقام */
     background-color: var(--keypad-button-bg);
     color: var(--text-color-dark-bg);
     border: none;
     border-radius: 8px;
-    font-size: 1.6rem; 
-    padding: 18px 0; 
+    font-size: 1.9rem; /* زيادة الحجم */
+    font-weight: bold; /* جعل الخط أعرض قليلاً */
+    padding: 20px 0; /* زيادة padding */
     cursor: pointer;
     transition: background-color 0.2s;
     user-select: none;
@@ -234,12 +249,12 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
     #score-keypad-overlay {
         padding: 20px; 
     }
-    #score-keypad-overlay .current-keypad-input-display {
+   #score-keypad-overlay .current-keypad-input-display {
         max-width: 320px;
-        font-size: 2rem;
-        padding: 15px;
-        margin-bottom: 15px;
-        min-height: 60px;
+        font-size: 2.6rem; /* زيادة */
+        padding: 18px; /* زيادة */
+        margin-bottom: 18px; /* زيادة */
+        min-height: 70px; /* زيادة */
         letter-spacing: 3px;
     }
     #score-keypad-overlay .keypad {
@@ -249,8 +264,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
         max-width: 320px;
     }
     #score-keypad-overlay .keypad button {
-        font-size: 1.8rem;
-        padding: 20px 0;
+        font-size: 2.2rem; /* زيادة */
+        padding: 22px 0; /* زيادة */
         border-radius: 10px;
     }
      .winner-message-box {
