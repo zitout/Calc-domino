@@ -7,11 +7,11 @@
     --keypad-bg: #181818;
     --keypad-button-bg: #282828;
     --keypad-button-hover-bg: #383838;
-    --text-color-dark-bg: #e0e0e0; /* نص فاتح على خلفية داكنة (للوحة المفاتيح مثلا) */
+    --text-color-dark-bg: #e0e0e0;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
 
 .score-container {
     width: 100%;
@@ -20,13 +20,14 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 }
 
 .side {
-    flex: 1; /* كل جانب يأخذ نصف المساحة */
+    flex: 1;
     height: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* للسماح بالتمرير إذا كانت القائمة طويلة */
-    position: relative; /* لوضع زر الإضافة */
+    overflow-y: auto;
+    position: relative;
+    cursor: pointer; /* للإشارة إلى أن الجانب بأكمله قابل للنقر لإضافة نقاط */
 }
 
 .left-side {
@@ -41,17 +42,17 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 }
 
 .scores-list {
-    flex-grow: 1; /* تجعل قائمة النقاط تأخذ المساحة المتاحة */
+    flex-grow: 1;
     margin-bottom: 15px;
 }
 
 .score-item {
-    font-size: clamp(1.5rem, 5vw, 2.5rem); /* حجم خط مرن */
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
     font-weight: bold;
     padding: 8px 0;
-    border-bottom: 1px dashed currentColor; /* خط فاصل بين النقاط بلون النص الحالي */
-    cursor: pointer;
-    text-align: center; /* توسيط الأرقام */
+    border-bottom: 1px dashed currentColor;
+    cursor: pointer; /* يبقى مؤشر النقر على العناصر لتعديلها */
+    text-align: center;
 }
 .score-item:last-child {
     border-bottom: none;
@@ -65,46 +66,21 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
     font-weight: bold;
     padding: 10px;
     text-align: center;
-    border-top: 2px solid currentColor; /* خط سميك فوق المجموع */
-    margin-top: auto; /* يدفع المجموع للأسفل إذا كانت القائمة قصيرة */
+    border-top: 2px solid currentColor;
+    margin-top: auto;
+    /* جعل المجموع غير قابل للنقر بشكل مباشر لمنع تداخل الأحداث */
+    pointer-events: none; 
 }
-
-/* زر الإضافة يملأ المساحة المتبقية (إذا لم تكن هناك نقاط) أو يكون كزر عائم */
-.add-score-area {
-    /* هذه طريقة بسيطة كزر، يمكن تعديلها لتكون منطقة غير مرئية تملأ الفراغ */
-    position: absolute;
-    bottom: 60px; /* فوق المجموع */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    font-size: 2rem;
-    border: 2px solid currentColor;
-    background-color: transparent;
-    color: currentColor;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.5; /* لجعله أقل بروزًا */
-}
-.add-score-area:hover {
-    opacity: 1;
-}
-/* إذا لم تكن هناك نقاط، يمكن جعل الـ scores-list نفسها قابلة للنقر */
-
 
 .reset-button {
     position: fixed;
     bottom: 20px;
-    /* يمكن وضعه في المنتصف أسفل أو في زاوية */
     left: 50%; 
     transform: translateX(-50%);
-    background-color: #555; /* لون مختلف لزر المسح العام */
+    background-color: #555;
     color: var(--text-color-dark-bg);
     border: none;
-    border-radius: 8px; /* مستطيل بدلاً من دائري */
+    border-radius: 8px;
     width: auto;
     padding: 10px 15px;
     height: 50px;
@@ -118,30 +94,49 @@ html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI
 .reset-button svg { fill: var(--text-color-dark-bg); }
 .reset-button:hover { background-color: #333; }
 
-/* تنسيقات لوحة الأرقام (Score Keypad) - مشابهة للسابق مع تعديلات */
+/* تنسيقات لوحة الأرقام (Score Keypad) - مكبرة */
 #score-keypad-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.85); /* تعتيم أكثر */
     display: none; justify-content: center; align-items: center;
     z-index: 1000; padding: 20px;
 }
 #score-keypad-overlay .current-keypad-input-display {
-    width: 100%; max-width: 280px; background-color: var(--keypad-button-bg);
-    color: var(--text-color-dark-bg); font-size: 1.8rem; padding: 10px 15px;
-    border-radius: 8px; margin-bottom: 10px; text-align: center;
-    min-height: 50px; display: flex; align-items: center; justify-content: center;
-    letter-spacing: 2px; border: 1px solid #444;
+    width: 100%;
+    max-width: 320px;
+    background-color: var(--keypad-button-bg);
+    color: var(--text-color-dark-bg);
+    font-size: 2rem;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 3px;
+    border: 1px solid #444;
 }
 #score-keypad-overlay .keypad {
-    background-color: var(--keypad-bg); padding: 15px; border-radius: 10px;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    width: 100%; max-width: 280px;
+    background-color: var(--keypad-bg);
+    padding: 20px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
 }
 #score-keypad-overlay .keypad button {
-    background-color: var(--keypad-button-bg); color: var(--text-color-dark-bg);
-    border: none; border-radius: 8px; font-size: 1.5rem; /* أصغر قليلاً */
-    padding: 18px 0; /* ارتفاع جيد */
-    cursor: pointer; transition: background-color 0.2s;
+    background-color: var(--keypad-button-bg);
+    color: var(--text-color-dark-bg);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.8rem;
+    padding: 20px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
     user-select: none;
 }
 #score-keypad-overlay .keypad button:hover { background-color: var(--keypad-button-hover-bg); }
