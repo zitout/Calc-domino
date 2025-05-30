@@ -1,0 +1,152 @@
+:root {
+    --left-bg: #ffffff;
+    --left-text: #1a963c; /* أخضر */
+    --right-bg: #000000;
+    --right-text: #e74c3c; /* أحمر */
+    --border-color: #cccccc;
+    --keypad-bg: #181818;
+    --keypad-button-bg: #282828;
+    --keypad-button-hover-bg: #383838;
+    --text-color-dark-bg: #e0e0e0; /* نص فاتح على خلفية داكنة (للوحة المفاتيح مثلا) */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+.score-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.side {
+    flex: 1; /* كل جانب يأخذ نصف المساحة */
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* للسماح بالتمرير إذا كانت القائمة طويلة */
+    position: relative; /* لوضع زر الإضافة */
+}
+
+.left-side {
+    background-color: var(--left-bg);
+    color: var(--left-text);
+    border-left: 1px solid var(--border-color); /* خط فاصل في المنتصف (RTL) */
+}
+
+.right-side {
+    background-color: var(--right-bg);
+    color: var(--right-text);
+}
+
+.scores-list {
+    flex-grow: 1; /* تجعل قائمة النقاط تأخذ المساحة المتاحة */
+    margin-bottom: 15px;
+}
+
+.score-item {
+    font-size: clamp(1.5rem, 5vw, 2.5rem); /* حجم خط مرن */
+    font-weight: bold;
+    padding: 8px 0;
+    border-bottom: 1px dashed currentColor; /* خط فاصل بين النقاط بلون النص الحالي */
+    cursor: pointer;
+    text-align: center; /* توسيط الأرقام */
+}
+.score-item:last-child {
+    border-bottom: none;
+}
+.score-item:hover {
+    opacity: 0.7;
+}
+
+.total-score {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+    border-top: 2px solid currentColor; /* خط سميك فوق المجموع */
+    margin-top: auto; /* يدفع المجموع للأسفل إذا كانت القائمة قصيرة */
+}
+
+/* زر الإضافة يملأ المساحة المتبقية (إذا لم تكن هناك نقاط) أو يكون كزر عائم */
+.add-score-area {
+    /* هذه طريقة بسيطة كزر، يمكن تعديلها لتكون منطقة غير مرئية تملأ الفراغ */
+    position: absolute;
+    bottom: 60px; /* فوق المجموع */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 2rem;
+    border: 2px solid currentColor;
+    background-color: transparent;
+    color: currentColor;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5; /* لجعله أقل بروزًا */
+}
+.add-score-area:hover {
+    opacity: 1;
+}
+/* إذا لم تكن هناك نقاط، يمكن جعل الـ scores-list نفسها قابلة للنقر */
+
+
+.reset-button {
+    position: fixed;
+    bottom: 20px;
+    /* يمكن وضعه في المنتصف أسفل أو في زاوية */
+    left: 50%; 
+    transform: translateX(-50%);
+    background-color: #555; /* لون مختلف لزر المسح العام */
+    color: var(--text-color-dark-bg);
+    border: none;
+    border-radius: 8px; /* مستطيل بدلاً من دائري */
+    width: auto;
+    padding: 10px 15px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+.reset-button svg { fill: var(--text-color-dark-bg); }
+.reset-button:hover { background-color: #333; }
+
+/* تنسيقات لوحة الأرقام (Score Keypad) - مشابهة للسابق مع تعديلات */
+#score-keypad-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: none; justify-content: center; align-items: center;
+    z-index: 1000; padding: 20px;
+}
+#score-keypad-overlay .current-keypad-input-display {
+    width: 100%; max-width: 280px; background-color: var(--keypad-button-bg);
+    color: var(--text-color-dark-bg); font-size: 1.8rem; padding: 10px 15px;
+    border-radius: 8px; margin-bottom: 10px; text-align: center;
+    min-height: 50px; display: flex; align-items: center; justify-content: center;
+    letter-spacing: 2px; border: 1px solid #444;
+}
+#score-keypad-overlay .keypad {
+    background-color: var(--keypad-bg); padding: 15px; border-radius: 10px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    width: 100%; max-width: 280px;
+}
+#score-keypad-overlay .keypad button {
+    background-color: var(--keypad-button-bg); color: var(--text-color-dark-bg);
+    border: none; border-radius: 8px; font-size: 1.5rem; /* أصغر قليلاً */
+    padding: 18px 0; /* ارتفاع جيد */
+    cursor: pointer; transition: background-color 0.2s;
+    user-select: none;
+}
+#score-keypad-overlay .keypad button:hover { background-color: var(--keypad-button-hover-bg); }
+#score-keypad-overlay .keypad button:active { background-color: #404040; }
+#score-keypad-overlay .keypad .keypad-confirm { background-color: #4CAF50; }
+#score-keypad-overlay .keypad .keypad-confirm:hover { background-color: #45a049; }
+#score-keypad-overlay .keypad .keypad-backspace { background-color: #f44336; }
+#score-keypad-overlay .keypad .keypad-backspace:hover { background-color: #da190b; }
