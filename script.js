@@ -65,19 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
         keypadOverlay.style.display = 'flex';
     }
 
-    [leftPanel, rightPanel].forEach(panel => {
+        [leftPanel, rightPanel].forEach(panel => {
         panel.addEventListener('click', (event) => {
-            // إذا كان النقر على عنصر نقطة موجود، فإن handleScoreItemClick سيتوقف عن الانتشار
-            // وبالتالي لن يصل هذا المستمع إلا إذا كان النقر على المساحة الفارغة للـ panel
-            if (event.target !== panel && !event.target.classList.contains('scores-list')) {
-                // إذا لم يكن النقر مباشرة على الـ panel أو الـ scores-list نفسها (لتجنب الفتح عند التمرير مثلاً)
-                // هذا الشرط قد يحتاج لتعديل حسب سلوك النقر الدقيق الذي تريده
-                // الهدف هو أن النقر على "الخلفية" للـ panel يفتح لوحة المفاتيح
-                return; 
+            // إذا كان الهدف الذي تم النقر عليه هو عنصر نقطة موجود (score-item)
+            // فإن handleScoreItemClick قد تم استدعاؤه بالفعل وأوقف الانتشار،
+            // أو إذا لم يوقف الانتشار، فإننا لا نريد فتح لوحة لإضافة جديدة.
+            if (event.target.classList.contains('score-item')) {
+                return; // لا تفعل شيئًا هنا، لأن تعديل النقطة يتم معالجته بشكل منفصل
             }
-            
+
+            // إذا وصل الكود إلى هنا، فهذا يعني أن النقر لم يكن على score-item
+            // وبالتالي، هو نقرة على المساحة الفارغة للـ panel (أو على scores-list الفارغة)
             currentEditingSide = panel.dataset.side;
-            currentEditingScoreElement = null; 
+            currentEditingScoreElement = null; // إضافة جديدة
             currentKeypadInput = "";
             currentScoreInputDisplay.textContent = currentKeypadInput || "-";
             keypadOverlay.style.display = 'flex';
