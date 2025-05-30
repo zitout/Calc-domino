@@ -5,39 +5,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const rightScoresList = document.getElementById('right-scores-list');
     const leftTotalDisplay = document.getElementById('left-total');
     const rightTotalDisplay = document.getElementById('right-total');
-    const addScoreButtons = document.querySelectorAll('.add-score-area'); // أو استهداف Panels مباشرة
 
     const keypadOverlay = document.getElementById('score-keypad-overlay');
     const currentScoreInputDisplay = document.getElementById('current-score-input');
     const keypadButtons = document.querySelectorAll('#score-keypad-overlay .keypad button');
     const resetAllButton = document.getElementById('reset-all-scores');
 
-    let currentEditingSide = null; // 'left' or 'right'
-    let currentEditingScoreElement = null; // عنصر النقطة الذي يتم تعديله
+    let currentEditingSide = null; 
+    let currentEditingScoreElement = null; 
     let currentKeypadInput = "";
 
-    const WIN_SCORE = 100; // النتيجة المطلوبة للفوز
+    const WIN_SCORE = 100; 
 
     let scores = {
         left: [],
         right: []
     };
 
-    // --- تحميل البيانات من localStorage ---
     function loadScores() {
-        const savedScores = localStorage.getItem('playerScores');
+        const savedScores = localStorage.getItem('playerScores_v2'); // استخدمت مفتاحًا جديدًا لتجنب تداخل البيانات القديمة
         if (savedScores) {
             scores = JSON.parse(savedScores);
         }
         renderScores();
     }
 
-    // --- حفظ البيانات في localStorage ---
     function saveScores() {
-        localStorage.setItem('playerScores', JSON.stringify(scores));
+        localStorage.setItem('playerScores_v2', JSON.stringify(scores));
     }
 
-    // --- عرض النقاط والمجموع ---
     function renderScores() {
         renderSideScores(leftScoresList, scores.left, leftTotalDisplay, 'left');
         renderSideScores(rightScoresList, scores.right, rightTotalDisplay, 'right');
@@ -45,57 +41,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderSideScores(listElement, sideScoresArray, totalElement, side) {
-        listElement.innerHTML = ''; // مسح القائمة الحالية
+        listElement.innerHTML = ''; 
         let total = 0;
         sideScoresArray.forEach((score, index) => {
             const scoreDiv = document.createElement('div');
             scoreDiv.classList.add('score-item');
             scoreDiv.textContent = score;
-            scoreDiv.dataset.index = index; // لتحديد العنصر عند التعديل
+            scoreDiv.dataset.index = index; 
             scoreDiv.dataset.side = side;
             scoreDiv.addEventListener('click', handleScoreItemClick);
             listElement.appendChild(scoreDiv);
-            total += score;
+            total += score; // تأكد أن score هو رقم
         });
         totalElement.textContent = `المجموع: ${total}`;
     }
 
-    // --- معالجة النقر على عنصر نقطة (للتعديل) ---
     function handleScoreItemClick(event) {
+        event.stopPropagation(); // مهم جدًا لمنع فتح لوحة المفاتيح لإضافة جديدة
         currentEditingScoreElement = event.target;
         currentEditingSide = event.target.dataset.side;
-        currentKeypadInput = event.target.textContent; // تحميل النقطة الحالية في لوحة المفاتيح
+        currentKeypadInput = event.target.textContent; 
         currentScoreInputDisplay.textContent = currentKeypadInput;
         keypadOverlay.style.display = 'flex';
     }
 
-    // --- معالجة النقر على منطقة لإضافة نقطة جديدة ---
-    addScoreButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            currentEditingSide = e.target.dataset.side;
-            currentEditingScoreElement = null; // لا يوجد تعديل، بل إضافة جديدة
+    [leftPanel, rightPanel].forEach(panel => {
+        panel.addEventListener('click', (event) => {
+            // إذا كان النقر على عنصر نقطة موجود، فإن handleScoreItemClick سيتوقف عن الانتشار
+            // وبالتالي لن يصل هذا المستمع إلا إذا كان النقر على المساحة الفارغة للـ panel
+            if (event.target !== panel && !event.target.classList.contains('scores-list')) {
+                // إذا لم يكن النقر مباشرة على الـ panel أو الـ scores-list نفسها (لتجنب الفتح عند التمرير مثلاً)
+                // هذا الشرط قد يحتاج لتعديل حسب سلوك النقر الدقيق الذي تريده
+                // الهدف هو أن النقر على "الخلفية" للـ panel يفتح لوحة المفاتيح
+                return; 
+            }
+            
+            currentEditingSide = panel.dataset.side;
+            currentEditingScoreElement = null; 
             currentKeypadInput = "";
-            currentScoreInputDisplay.textContent = "-";
+            currentScoreInputDisplay.textContent = currentKeypadInput || "-";
             keypadOverlay.style.display = 'flex';
         });
     });
-    // بدلاً من الزر، يمكن جعل الـ panel نفسه قابل للنقر إذا كان فارغًا
-    // leftPanel.addEventListener('click', (e) => { if (e.target === leftPanel) handleAddClick('left'); });
-    // rightPanel.addEventListener('click', (e) => { if (e.target === rightPanel) handleAddClick('right'); });
 
-
-    // --- منطق لوحة الأرقام ---
     keypadButtons.forEach(button => {
         button.addEventListener('click', () => {
             const keyValue = button.dataset.key;
 
             if (keyValue === 'confirm-score') {
+                if (currentKeypadInput.trim() === "") {
+                    // alert("الرجاء إدخال رقم."); // يمكنك تفعيل هذا
+                    closeKeypad();
+                    return;
+                }
                 const newScore = parseInt(currentKeypadInput);
                 if (!isNaN(newScore) && currentEditingSide) {
-                    if (currentEditingScoreElement) { // تعديل نقطة موجودة
+                    if (currentEditingScoreElement) { 
                         const index = parseInt(currentEditingScoreElement.dataset.index);
                         scores[currentEditingSide][index] = newScore;
-                    } else { // إضافة نقطة جديدة
+                    } else { 
                         scores[currentEditingSide].push(newScore);
                     }
                     saveScores();
@@ -104,8 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeKeypad();
             } else if (keyValue === 'clear-digit') {
                 currentKeypadInput = currentKeypadInput.slice(0, -1);
-            } else { // الأرقام 0-9
-                if (currentKeypadInput.length < 4) { // حد أقصى لعدد خانات النقطة (مثلاً 9999)
+            } else { 
+                if (currentKeypadInput.length < 4) { 
                     currentKeypadInput += keyValue;
                 }
             }
@@ -121,8 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     keypadOverlay.addEventListener('click', (e) => { if (e.target === keypadOverlay) closeKeypad(); });
 
-
-    // --- زر المسح الكلي ---
     resetAllButton.addEventListener('click', () => {
         if (confirm("هل أنت متأكد أنك تريد مسح جميع النقاط؟")) {
             scores.left = [];
@@ -132,21 +134,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // --- التحقق من الفوز ---
     function checkWinCondition() {
         let leftTotal = scores.left.reduce((sum, score) => sum + score, 0);
         let rightTotal = scores.right.reduce((sum, score) => sum + score, 0);
 
+        let message = "";
         if (leftTotal >= WIN_SCORE && leftTotal > rightTotal) {
-            alert("الفريق الأيسر فاز!");
-            // يمكن إضافة تمييز بصري للفائز
+            message = "الفريق الأيسر فاز!";
         } else if (rightTotal >= WIN_SCORE && rightTotal > leftTotal) {
-            alert("الفريق الأيمن فاز!");
-        } else if (rightTotal >= WIN_SCORE && rightTotal === leftTotal && WIN_SCORE > 0) {
-             alert("تعادل والفريقان وصلا للهدف!");
+            message = "الفريق الأيمن فاز!";
+        } else if (leftTotal >= WIN_SCORE && rightTotal >= WIN_SCORE && leftTotal === rightTotal && WIN_SCORE > 0) {
+             message = "تعادل والفريقان وصلا للهدف!";
+        }
+        // يمكنك عرض الرسالة بطريقة أفضل من alert إذا أردت
+        if (message) {
+            // setTimeout(() => alert(message), 100); // تأخير بسيط لضمان عرض النتيجة النهائية أولاً
         }
     }
 
-    // --- التحميل الأولي ---
     loadScores();
 });
