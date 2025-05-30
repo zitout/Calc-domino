@@ -2,58 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="تطبيق بسيط لتسجيل النقاط بين فريقين، مع واجهة سهلة الاستخدام وميزات حديثة.">
-    <meta name="keywords" content="مسجل نقاط, حاسبة نقاط, لعبة, نقاط, score keeper, counter">
-    <title>مسجل النقاط المحدث</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>مسجل النقاط</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
 </head>
 <body>
-    <main class="score-container">
-        <section class="side left-side" id="left-panel" data-side="left" aria-labelledby="left-team-label">
-            <h2 class="team-label visually-hidden" id="left-team-label">الفريق الأبيض</h2>
-            <div class="scores-list" id="left-scores-list" role="log" aria-live="polite">
+    <div class="score-container">
+        <div class="side left-side" id="left-panel" data-side="left">
+            <div class="scores-list" id="left-scores-list">
                 <!-- الأرقام ستضاف هنا بواسطة JavaScript -->
             </div>
-            <div class="total-score" id="left-total" aria-live="polite">المجموع: 0</div>
-        </section>
+            <div class="total-score" id="left-total">المجموع: 0</div>
+        </div>
 
-        <section class="side right-side" id="right-panel" data-side="right" aria-labelledby="right-team-label">
-            <h2 class="team-label visually-hidden" id="right-team-label">الفريق الأسود</h2>
-            <div class="scores-list" id="right-scores-list" role="log" aria-live="polite">
+        <div class="side right-side" id="right-panel" data-side="right">
+            <div class="scores-list" id="right-scores-list">
                 <!-- الأرقام ستضاف هنا بواسطة JavaScript -->
             </div>
-            <div class="total-score" id="right-total" aria-live="polite">المجموع: 0</div>
-        </section>
-    </main>
-
-    <button class="reset-button" id="reset-all-scores" title="مسح كل النقاط والبدء من جديد" aria-label="مسح كل النقاط والبدء من جديد">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24" aria-hidden="true"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.17l2.12-2.12 1.41 1.41L13.41 13.5l2.12 2.12-1.41 1.41L12 14.83l-2.12 2.12-1.41-1.41L10.59 13.5l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-        <span>إعادة تعيين</span>
-    </button>
-
-    <div class="keypad-overlay" id="score-keypad-overlay" role="dialog" aria-modal="true" aria-labelledby="keypad-title" hidden>
-        <div class="keypad-content">
-            <h3 id="keypad-title" class="visually-hidden">لوحة مفاتيح إدخال النقاط</h3>
-            <div class="current-keypad-input-display" id="current-score-input" aria-live="assertive"></div>
-            <div class="keypad">
-                <button data-key="1">1</button> <button data-key="2">2</button> <button data-key="3">3</button>
-                <button data-key="4">4</button> <button data-key="5">5</button> <button data-key="6">6</button>
-                <button data-key="7">7</button> <button data-key="8">8</button> <button data-key="9">9</button>
-                <button data-key="clear-digit" class="keypad-backspace" aria-label="مسح الرقم الأخير">⌫</button>
-                <button data-key="0">0</button>
-                <button data-key="confirm-score" class="keypad-confirm" aria-label="تأكيد النقاط">✔️</button>
-            </div>
+            <div class="total-score" id="right-total">المجموع: 0</div>
         </div>
     </div>
 
-    <div class="winner-overlay" id="winner-overlay" role="alertdialog" aria-modal="true" aria-labelledby="winner-text" hidden>
+    <button class="reset-button" id="reset-all-scores" title="مسح كل النقاط">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.17l2.12-2.12 1.41 1.41L13.41 13.5l2.12 2.12-1.41 1.41L12 14.83l-2.12 2.12-1.41-1.41L10.59 13.5l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    </button>
+
+    <div class="keypad-overlay" id="score-keypad-overlay">
+        <div class="current-keypad-input-display" id="current-score-input"></div>
+        <div class="keypad">
+            <button data-key="1">1</button> <button data-key="2">2</button> <button data-key="3">3</button>
+            <button data-key="4">4</button> <button data-key="5">5</button> <button data-key="6">6</button>
+            <button data-key="7">7</button> <button data-key="8">8</button> <button data-key="9">9</button>
+            <button data-key="clear-digit" class="keypad-backspace">⌫</button>
+            <button data-key="0">0</button>
+            <button data-key="confirm-score" class="keypad-confirm">✔️</button>
+        </div>
+    </div>
+
+    <div class="winner-overlay" id="winner-overlay">
         <div class="winner-message-box">
-            <div class="confetti-container" id="confetti-container" aria-hidden="true">
+            <div class="confetti-container" id="confetti-container">
                 <!-- Confetti will be generated here by JavaScript -->
             </div>
             <h2 id="winner-text"></h2>
@@ -61,6 +49,6 @@
         </div>
     </div>
 
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 </html>
