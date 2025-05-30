@@ -1,70 +1,18 @@
 :root {
-    --font-family-primary: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-    --left-bg: #f8f9fa;  /* Light gray, almost white */
-    --left-text: #18A33F; /* A slightly more vibrant green */
-    --left-border: #dee2e6;
-
-    --right-bg: #212529; /* Dark gray, not pure black */
-    --right-text: #e74c3c; /* Red, kept similar */
-    --right-border: #495057;
-
-    --neutral-bg-light: #ffffff;
-    --neutral-bg-dark: #343a40;
-    --neutral-text-light: #212529;
-    --neutral-text-dark: #f8f9fa;
-
-    --accent-color: #007bff; /* Blue for general accents */
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-
-    --border-radius-sm: 0.25rem; /* 4px */
-    --border-radius-md: 0.5rem;  /* 8px */
-    --border-radius-lg: 0.75rem; /* 12px */
-
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-    --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
-    --shadow-lg: 0 10px 20px rgba(0,0,0,0.15);
-
-    --keypad-bg: #1c1c1e;
-    --keypad-button-bg: #2c2c2e;
-    --keypad-button-hover-bg: #3a3a3c;
-    --keypad-text-color: #f0f0f0;
+    --left-bg: #ffffff;
+    --left-text: #1a963c; /* أخضر */
+    --right-bg: #000000;
+    --right-text: #e74c3c; /* أحمر */
+    --border-color: #cccccc;
+    --keypad-bg: #181818;
+    --keypad-button-bg: #282828;
+    --keypad-button-hover-bg: #383838;
+    --text-color-dark-bg: #e0e0e0;
 }
 
-/* Basic Reset & Globals */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
 
-html { 
-    font-size: 16px; /* Base font size */
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: var(--font-family-primary);
-    width: 100%;
-    height: 100vh; /* Use vh for full viewport height */
-    overflow: hidden; /* Prevents scrollbars from main body */
-    -webkit-tap-highlight-color: transparent;
-    background-color: var(--neutral-bg-light); /* Fallback background */
-    line-height: 1.6;
-    color: var(--neutral-text-light);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Visually Hidden Class for Accessibility */
-.visually-hidden {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-}
-
-/* Main Score Container */
 .score-container {
     width: 100%;
     height: 100%;
@@ -74,19 +22,18 @@ body {
 .side {
     flex: 1;
     height: 100%;
-    padding: clamp(1rem, 2.5vw, 1.5rem); /* Responsive padding */
+    padding: 20px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    cursor: pointer; 
 }
 
 .left-side {
     background-color: var(--left-bg);
     color: var(--left-text);
-    border-inline-end: 1px solid var(--left-border);
+    border-left: 1px solid var(--border-color); 
 }
 
 .right-side {
@@ -96,259 +43,218 @@ body {
 
 .scores-list {
     flex-grow: 1;
-    margin-block-end: 1rem; /* Logical property for margin-bottom */
+    margin-bottom: 15px;
 }
 
 .score-item {
-    font-size: clamp(1.75rem, 6vw, 2.8rem); /* Increased size slightly */
-    font-weight: 500; /* Tajawal medium weight */
-    padding: 0.6em 0; /* Use em for padding relative to font-size */
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: bold;
+    padding: 8px 0;
     border-bottom: 1px dashed currentColor;
-    cursor: pointer;
+    cursor: pointer; 
     text-align: center;
-    border-radius: var(--border-radius-sm);
-    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease-out;
-    will-change: transform; /* Performance hint */
 }
 .score-item:last-child {
     border-bottom: none;
 }
 .score-item:hover {
-    background-color: rgba(128, 128, 128, 0.1);
-    opacity: 0.85;
-}
-.score-item:active {
-    transform: scale(0.97);
+    opacity: 0.7;
 }
 
 .total-score {
-    font-size: clamp(1.3rem, 4.5vw, 2.2rem); /* Increased size */
-    font-weight: 700; /* Tajawal bold weight */
-    padding: 0.75em;
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-weight: bold;
+    padding: 10px;
     text-align: center;
     border-top: 2px solid currentColor;
-    margin-block-start: auto; /* Logical property for margin-top */
-    pointer-events: none;
-    background-color: rgba(128, 128, 128, 0.05);
-    border-radius: var(--border-radius-md);
+    margin-top: auto;
+    pointer-events: none; 
 }
 
-/* Reset Button */
 .reset-button {
     position: fixed;
     bottom: 20px;
-    left: 50%;
+    left: 50%; 
     transform: translateX(-50%);
-    background-color: var(--neutral-bg-dark);
-    color: var(--neutral-text-dark);
+    background-color: #555;
+    color: var(--text-color-dark-bg);
     border: none;
-    border-radius: var(--border-radius-md);
-    padding: 0.75rem 1.2rem;
-    height: auto; /* Let padding define height */
+    border-radius: 8px;
+    width: auto;
+    padding: 10px 15px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem; /* Space between icon and text */
     cursor: pointer;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     z-index: 100;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: background-color 0.2s ease, transform 0.1s ease-out, box-shadow 0.2s ease;
 }
-.reset-button svg { 
-    fill: var(--neutral-text-dark);
-    width: 20px; /* Slightly smaller icon */
-    height: 20px;
-}
-.reset-button:hover { 
-    background-color: #495057; /* Darken on hover */
-    box-shadow: var(--shadow-lg);
-}
-.reset-button:active {
-    transform: translateX(-50%) scale(0.95);
-}
+.reset-button svg { fill: var(--text-color-dark-bg); }
+.reset-button:hover { background-color: #333; }
 
-/* Overlays General Styles */
-.keypad-overlay, .winner-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.8); /* Slightly less opaque for keypad */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    opacity: 0; /* Start hidden for transition */
-    visibility: hidden; /* Start hidden for transition */
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 1000;
-}
-.keypad-overlay[hidden], .winner-overlay[hidden] {
-    display: none; /* Ensure it's fully removed from layout when hidden by JS */
-}
-.keypad-overlay:not([hidden]), .winner-overlay:not([hidden]) {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Keypad Specific Styles */
+/* Keypad Overlay Styles */
 #score-keypad-overlay {
-    background-color: rgba(10, 10, 10, 0.88); /* Darker for keypad focus */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    display: none; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 1000; 
+    padding: 15px; 
 }
-.keypad-content { /* Added a wrapper for content within overlay */
-    background-color: var(--keypad-bg);
-    padding: clamp(1rem, 3vw, 1.5rem);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 340px; /* Slightly wider keypad */
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-#current-score-input {
+#score-keypad-overlay .current-keypad-input-display {
+    width: 90%; 
+    max-width: 300px; 
     background-color: var(--keypad-button-bg);
-    color: var(--keypad-text-color);
-    font-size: clamp(1.8rem, 5vw, 2.2rem);
-    font-weight: 500;
-    padding: 0.75em;
-    border-radius: var(--border-radius-md);
+    color: var(--text-color-dark-bg);
+    font-size: 1.8rem; 
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
     text-align: center;
-    min-height: 70px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     letter-spacing: 2px;
     border: 1px solid #444;
-    transition: border-color 0.2s ease;
 }
-#current-score-input:empty::before { /* Placeholder for empty input */
-    content: "-";
-    color: #777;
-}
-.keypad {
+#score-keypad-overlay .keypad {
+    background-color: var(--keypad-bg);
+    padding: 15px;
+    border-radius: 10px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem; /* Slightly reduced gap */
+    gap: 10px;
+    width: 90%; 
+    max-width: 300px; 
 }
-.keypad button {
+#score-keypad-overlay .keypad button {
     background-color: var(--keypad-button-bg);
-    color: var(--keypad-text-color);
+    color: var(--text-color-dark-bg);
     border: none;
-    border-radius: var(--border-radius-md);
-    font-size: clamp(1.5rem, 4vw, 1.8rem);
-    font-weight: 500;
-    padding: 1.1em 0; /* Use em for padding */
+    border-radius: 8px;
+    font-size: 1.6rem; 
+    padding: 18px 0; 
     cursor: pointer;
-    transition: background-color 0.15s ease, transform 0.1s ease-out;
+    transition: background-color 0.2s;
     user-select: none;
-    -webkit-tap-highlight-color: rgba(255,255,255,0.1); /* Subtle tap highlight */
 }
-.keypad button:hover { background-color: var(--keypad-button-hover-bg); }
-.keypad button:active { 
-    background-color: #424244;
-    transform: scale(0.95); 
-}
-.keypad .keypad-confirm { background-color: var(--success-color); }
-.keypad .keypad-confirm:hover { background-color: #218838; } /* Darker success */
-.keypad .keypad-backspace { background-color: var(--danger-color); }
-.keypad .keypad-backspace:hover { background-color: #c82333; } /* Darker danger */
+#score-keypad-overlay .keypad button:hover { background-color: var(--keypad-button-hover-bg); }
+#score-keypad-overlay .keypad button:active { background-color: #404040; }
+#score-keypad-overlay .keypad .keypad-confirm { background-color: #4CAF50; }
+#score-keypad-overlay .keypad .keypad-confirm:hover { background-color: #45a049; }
+#score-keypad-overlay .keypad .keypad-backspace { background-color: #f44336; }
+#score-keypad-overlay .keypad .keypad-backspace:hover { background-color: #da190b; }
 
 /* Winner Overlay Styles */
 .winner-overlay {
-    background-color: rgba(0, 0, 0, 0.9); /* Darker overlay for winner */
-    z-index: 2000;
-}
-.winner-message-box {
-    background-color: var(--neutral-bg-dark);
-    padding: clamp(1.5rem, 5vw, 2.5rem) clamp(2rem, 6vw, 3rem);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-    color: var(--neutral-text-dark);
-    position: relative;
-    overflow: hidden;
-    max-width: 90%;
-    width: auto; /* Allow content to define width up to max-width */
-    min-width: 300px; /* Minimum width for better appearance */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.92); /* أكثر تعتيمًا */
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; 
     text-align: center;
-}
-#winner-text {
-    font-size: clamp(1.8rem, 6vw, 3rem);
-    margin-block-end: 1.5rem;
-    font-weight: 700;
-    color: #f1c40f; /* Gold for winner */
-    line-height: 1.3;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-#play-again-button {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 0.8em 1.8em; /* Use em for padding */
-    font-size: 1.05rem;
-    font-weight: 500;
-    border-radius: var(--border-radius-md);
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease-out;
-    margin-block-start: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-#play-again-button:hover {
-    background-color: #0056b3; /* Darker accent */
-}
-#play-again-button:active {
-    transform: scale(0.95);
+    padding: 20px;
 }
 
-/* Confetti Styles (Mostly unchanged, slight adjustments) */
-.confetti-container {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; overflow: hidden;
+.winner-message-box {
+    background-color: #1f2c39; /* لون أغمق قليلاً للاحتفال */
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    color: #ecf0f1; 
+    position: relative; 
+    overflow: hidden; 
+    max-width: 90%;
 }
+
+#winner-text {
+    font-size: clamp(1.7rem, 5.5vw, 2.8rem);
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #f1c40f; 
+    line-height: 1.4;
+}
+
+#play-again-button {
+    background-color: #2980b9; /* أزرق أغمق قليلاً */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 25px; /* زيادة المسافة العلوية */
+}
+#play-again-button:hover {
+    background-color: #1c5a80;
+}
+
+.confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
+    overflow: hidden;
+}
+
 .confetti {
     position: absolute;
-    width: 10px; height: 10px;
-    opacity: 0; /* Start with opacity 0 for animation */
-    animation: fall 3.5s linear forwards; /* Use forwards to keep end state */
-    border-radius: 4px;
+    width: 10px;
+    height: 10px;
+    opacity: 0.8; /* زيادة الشفافية قليلاً */
+    animation: fall 3.5s linear infinite; /* زيادة طفيفة في مدة السقوط */
+    border-radius: 3px; 
 }
+
 @keyframes fall {
     0% {
-        transform: translateY(-50px) rotateZ(0deg);
-        opacity: 0.9;
+        transform: translateY(-30px) rotateZ(0deg);
+        opacity: 0.8;
     }
     100% {
-        transform: translateY(105vh) rotateZ(720deg);
+        transform: translateY(110vh) rotateZ(720deg); 
         opacity: 0;
     }
 }
 
-/* Media Query for larger screens (Desktop) - Adjustments as needed */
-@media (min-width: 768px) {
-    .keypad-content {
-        max-width: 380px; /* Wider keypad on desktop */
-        padding: 1.8rem;
-        gap: 1.2rem;
+/* Media Query for larger screens (Desktop) - Optional adjustments */
+@media (min-width: 600px) {
+    #score-keypad-overlay {
+        padding: 20px; 
     }
-    #current-score-input {
-        font-size: 2.5rem;
-        min-height: 80px;
-    }
-    .keypad button {
+    #score-keypad-overlay .current-keypad-input-display {
+        max-width: 320px;
         font-size: 2rem;
-        padding: 1.2em 0;
+        padding: 15px;
+        margin-bottom: 15px;
+        min-height: 60px;
+        letter-spacing: 3px;
     }
-    .winner-message-box {
-        max-width: 550px;
+    #score-keypad-overlay .keypad {
+        padding: 20px;
+        border-radius: 12px;
+        gap: 12px;
+        max-width: 320px;
     }
-    .reset-button {
-        font-size: 1rem;
-        padding: 0.8rem 1.5rem;
+    #score-keypad-overlay .keypad button {
+        font-size: 1.8rem;
+        padding: 20px 0;
+        border-radius: 10px;
     }
-     .reset-button svg {
-        width: 22px;
-        height: 22px;
+     .winner-message-box {
+        max-width: 500px; /* عرض أكبر لصندوق الفوز على الشاشات الكبيرة */
     }
 }
 
